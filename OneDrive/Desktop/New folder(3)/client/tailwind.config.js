@@ -10,7 +10,8 @@ export default {
       wblue:"#659DBD",
       wskin:"#DAAD86",
       wbrown:"#BC986A",
-      wcreame:"#FBEEC1"
+      wcreame:"#FBEEC1",
+      wdcreame:"#D5D591"
     },
     extend: {},
   },
