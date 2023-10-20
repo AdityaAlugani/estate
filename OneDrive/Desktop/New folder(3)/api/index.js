@@ -17,3 +17,11 @@ app.listen(4001,()=>{
 
 app.use('/api/user',userRouter);
 app.use('/api/auth',authRouter);
+
+//middleware error handling
+app.use((error,req,res,next)=>{ 
+    const statusCode=error.statusCode || 500;
+    const message=error.message || "Internal server error";
+    return res.status(statusCode).json({message,statusCode});
+});
+
