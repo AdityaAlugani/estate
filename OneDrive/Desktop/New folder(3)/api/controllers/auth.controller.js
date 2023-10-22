@@ -1,6 +1,7 @@
 import User from "../models/user.model.js";
 import bcryptjs from 'bcryptjs';
 import errorHandler from "../utils/error.js";
+import jwt from 'jsonwebtoken';
 
 export const signup= async (req,res,next)=>
 {
@@ -17,4 +18,30 @@ export const signup= async (req,res,next)=>
     {
         next(error);
     }
-}   
+};
+
+export const signin=async (req,res,next)=>{
+    const {gmail,password}=req.body;
+    try
+    {
+        const validUser=await User.findOne({gmail});
+        if(!validUser)
+        {
+            return next(errorHandler(404,"user not found!!"));
+        }
+        
+        const validPassword=bcryptjs.compareSync(password,validUser.password);
+        if(!validPassword)
+        {
+            return next(errorHandler(401,"Invalid username or password!!"));
+        }
+        const token=jwt.sign({id:validUser._id},"SERECT_KEY");
+        const validUserReturned={...validUser}._doc;
+        validUserReturned.password="hidden";
+        return res.cookie('access token',token,{httpOnly:true}).status(200).json({validUser:validUserReturned}); 
+    }
+    catch(error)
+    {
+        next(error);
+    }
+}
