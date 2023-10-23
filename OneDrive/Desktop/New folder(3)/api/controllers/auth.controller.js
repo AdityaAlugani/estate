@@ -45,3 +45,33 @@ export const signin=async (req,res,next)=>{
         next(error);
     }
 }
+
+export const google=async (req,res,next)=>{
+    try{
+        const validUser=await User.findOne({gmail:req.body.gmail});
+        if(validUser)
+        {
+            const token=jwt.sign({id:validUser._id},"SERECT_KEY");
+            const validUserReturned={...validUser}._doc;
+            validUserReturned.password="hidden";
+            return res.cookie('access token',token,{httpOnly:true}).status(200).json({validUser:validUserReturned}); 
+        }
+        else
+        {
+            const passwordgenerated=Math.random().toString(36).slice(-8)+Math.random().toString(36).slice(-8);
+            const hashedpassword=await bcryptjs.hashSync(passwordgenerated,10);
+            const newUser=new User({username:req.body.name.split(" ").join("").toLowerCase()+Math.random().toString(36).slice(-4),gmail:req.body.gmail,password:hashedpassword,
+            avatar:req.body.photo,
+        });
+            await newUser.save();
+            const token=jwt.sign({id:newUser._id},"SERECT_KEY");
+            const validUserReturned={...newUser}._doc;
+            validUserReturned.password="hidden";
+            return res.cookie('access token',token,{httpOnly:true}).status(200).json({validUser:validUserReturned});    
+        }
+    }
+    catch(error)
+    {
+        next(error);
+    }
+}

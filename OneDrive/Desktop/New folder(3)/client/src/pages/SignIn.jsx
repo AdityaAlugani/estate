@@ -3,6 +3,7 @@ import react, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { signInFailure,signInStart,signInSuccess } from "../redux/user/userSlice.js";
+import OAuth from "../components/OAuth.jsx";
 
 const SignIn=()=>{
     const {loading,error}=useSelector((state)=>state.user);
@@ -54,6 +55,7 @@ const SignIn=()=>{
             <input className=" p-3 rounded-lg" onChange={handleChange} type="text" placeholder="Gmail" id="gmail" />
             <input className=" p-3 rounded-lg" onChange={handleChange} type="password" placeholder="Password" id="password" />
             <button disabled={loading} className="rounded-lg p-3 bg-wcreame hover:bg-wdcreame disabled:bg-wcreame">{loading==true ? "Loading...." : "Sign In"}</button>
+            <OAuth />
         </form>
         <div className="flex flex-col p-4  hover:text-wblue font-semibold font-mono hover:cursor-pointer" 
         onClick={()=>navigate("/signup")}>

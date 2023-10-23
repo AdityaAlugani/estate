@@ -11,7 +11,9 @@ export default {
       wskin:"#DAAD86",
       wbrown:"#BC986A",
       wcreame:"#FBEEC1",
-      wdcreame:"#D5D591"
+      wdcreame:"#D5D591",
+      googleblue:"#4285F4",
+      googlewhite:"#FFFFFF"
     },
     extend: {},
   },
