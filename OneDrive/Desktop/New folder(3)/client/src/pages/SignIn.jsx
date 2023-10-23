@@ -1,11 +1,13 @@
 import { data } from "autoprefixer";
 import react, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { signInFailure,signInStart,signInSuccess } from "../redux/user/userSlice.js";
 
 const SignIn=()=>{
-    const [loading,setLoading]=useState(false);
-    const [errormessage,setErrorMessage]=useState(null);
+    const {loading,error}=useSelector((state)=>state.user);
     const navigate=useNavigate();
+    const dispatch=useDispatch();
     const [formData,setFormData]=useState({});
     const handleChange=(e)=>{
         setFormData(
@@ -17,33 +19,31 @@ const SignIn=()=>{
     };
     const handleSubmit=async (e)=>{
         console.log(formData);
-        setLoading(true);
         e.preventDefault();
-        const saveduser=await fetch('/api/auth/signin',{
-            method:'POST',  
-            headers:{
-                'Content-Type':'application/json'
-            },
-            body:JSON.stringify(formData),
-        });
         try
         {
+            dispatch(signInStart());
+            const saveduser=await fetch('/api/auth/signin',{
+                method:'POST',  
+                headers:{
+                    'Content-Type':'application/json'
+                },
+                body:JSON.stringify(formData),
+            });
+            
             const data=await saveduser.json();
             if(data.success===false)
             {
-                setErrorMessage(data.message);
-                setLoading(false);
+                dispatch(signInFailure(data.message));
                 return;
             }
-            setLoading(false);
-            setErrorMessage("");
+            dispatch(signInSuccess(data.validUser));
             console.log(data);
             navigate('/');
         }
         catch(error)
         {
-            setErrorMessage(data.message);
-            setLoading(false);
+            dispatch(signInFailure(data.message));
         }
         
     };
@@ -59,7 +59,7 @@ const SignIn=()=>{
         onClick={()=>navigate("/signup")}>
             <h1>Not an existing user?</h1>
             <h1>Sign Up</h1>
-            <div className="text-red">{errormessage}</div>
+            <div className="text-red">{error}</div>
         </div>
     </div>
 }
