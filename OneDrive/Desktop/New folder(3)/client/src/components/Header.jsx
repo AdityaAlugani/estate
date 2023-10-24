@@ -1,9 +1,11 @@
 import React from "react";
 import {FaSearch} from 'react-icons/fa'
 import { Link, useNavigate } from "react-router-dom";{/*No*/}
+import {useSelector} from "react-redux";
 
 const Header=()=>{
     const navigate=useNavigate();
+    const currentUser=useSelector((state)=>state.user.user.currentUser);
     return (<header className="bg-wskin shadow-md">
         <div className="flex justify-between items-center max-w-7xl  mx-auto p-3">
             <h1 onClick={()=>navigate("/")} className="font-bold text-sm sm:text-xl flex flex-wrap hover:cursor-pointer">
@@ -17,10 +19,12 @@ const Header=()=>{
                 </div>
                 
             </form>
-            <ul className="flex gap-4 ml-4 text-wcreame">
+            <ul className="flex gap-4 ml-4 text-wcreame justify-center align-center">
                     <li onClick={()=>navigate("/")}  className="hidden sm:inline hover:underline hover:cursor-pointer">Home</li>
                     <li onClick={()=>navigate("/about")} className="hidden sm:inline hover:underline hover:cursor-pointer">About</li>
-                    <li onClick={()=>navigate("/signin")} className="hover:underline hover:cursor-pointer">Sign In</li>
+                    {currentUser ? <img onClick={()=>navigate("/profile")} className="rounded-full h-7 w-7 object-cover" src={currentUser.avatar} alt="profile" /> : 
+                    <li onClick={()=>navigate("/signin")} className="hover:underline hover:cursor-pointer">Sign In</li> }
+                    
                 </ul>
         </div>
         

@@ -38,7 +38,7 @@ export const signin=async (req,res,next)=>{
         const token=jwt.sign({id:validUser._id},"SERECT_KEY");
         const validUserReturned={...validUser}._doc;
         validUserReturned.password="hidden";
-        return res.cookie('access token',token,{httpOnly:true}).status(200).json({validUser:validUserReturned}); 
+        return res.cookie('access token',token,{httpOnly:true}).status(200).json(validUserReturned); 
     }
     catch(error)
     {
@@ -54,7 +54,7 @@ export const google=async (req,res,next)=>{
             const token=jwt.sign({id:validUser._id},"SERECT_KEY");
             const validUserReturned={...validUser}._doc;
             validUserReturned.password="hidden";
-            return res.cookie('access token',token,{httpOnly:true}).status(200).json({validUser:validUserReturned}); 
+            return res.cookie('access token',token,{httpOnly:true}).status(200).json(validUserReturned); 
         }
         else
         {
@@ -67,7 +67,7 @@ export const google=async (req,res,next)=>{
             const token=jwt.sign({id:newUser._id},"SERECT_KEY");
             const validUserReturned={...newUser}._doc;
             validUserReturned.password="hidden";
-            return res.cookie('access token',token,{httpOnly:true}).status(200).json({validUser:validUserReturned});    
+            return res.cookie('access token',token,{httpOnly:true}).status(200).json(validUserReturned);    
         }
     }
     catch(error)

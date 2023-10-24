@@ -16,7 +16,7 @@ const userSchema=new mongoose.Schema({
     },
     avatar:{
         type:String,
-        default:"https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.istockphoto.com%2Fphotos%2Fprofile&psig=AOvVaw1y82pt388yW12xbEfkFLTT&ust=1698181775549000&source=images&cd=vfe&ved=0CBEQjRxqFwoTCPi4q5-KjYIDFQAAAAAdAAAAABAE",
+        default:"https://t4.ftcdn.net/jpg/00/64/67/27/360_F_64672736_U5kpdGs9keUll8CRQ3p3YaEv2M6qkVY5.jpg",
     },
         
 },{timestamps:true});
