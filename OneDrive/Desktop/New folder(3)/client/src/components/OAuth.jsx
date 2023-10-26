@@ -30,7 +30,7 @@ const OAuth=()=>{
             console.log("could not sign in with google",error);
         }
     }
-    return <button onClick={handleGoogleClick} type="button" className="bg-googleblue text-googlewhite p-3 rounded-lg hover:bg-wbrown uppercase">Continue With Google?</button>
+    return <button onClick={handleGoogleClick} type="button" className="bg-googleblue text-googlewhite p-3 rounded-lg hover:bg-redLight uppercase">Continue With Google?</button>
 }
 
 export default OAuth;

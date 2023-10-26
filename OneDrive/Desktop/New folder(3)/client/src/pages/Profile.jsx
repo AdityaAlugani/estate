@@ -1,17 +1,24 @@
 import react, { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import {getDownloadURL, getStorage, ref, uploadBytesResumable} from 'firebase/storage';
-import {app} from '../firebase.js'
+import {app} from '../firebase.js';
+import { updateUserFailure,updateUserStart,updateUserSuccess } from "../redux/user/userSlice.js";
+import { useDispatch } from "react-redux";
 
 const Profile=()=>{
     const currentUser=useSelector((state)=>state.user.user.currentUser);
+    const Loading=useSelector((state)=>state.user.user.loading);
+    const Error=useSelector((state)=>state.user.user.error);
     const fileRef=useRef(null);
+    const dispatch=useDispatch();
     const [file,setFile]=useState(undefined);
     const [filePercentage,setFilePercentage]=useState(0);
     const [fileError,setFileError]=useState(false);
     const [formData,setFormData]=useState({});
+    const [updateSuccess,setUpdateSuccess]=useState(false);
     //console.log(filePercentage+"%");
     console.log(formData);
+    //console.log(currentUser.gmail);
 
     const handleFileSubmit=(file)=>{
         const storage=getStorage(app);
@@ -40,23 +47,55 @@ const Profile=()=>{
         {
             handleFileSubmit(file);
         }
-    },[file])
+    },[file]);
+    const handleFormChange=(e)=>{
+        setFormData({...formData,[e.target.id]:e.target.value});
+    };
+    const handleSubmit=async (e)=>{
+        //setFormData({...currentUser,...formData});
+        console.log("Form data before sending",formData);
+        e.preventDefault();
+        try{
+            dispatch(updateUserStart());
+            const updatedUser=await fetch(`api/user/update/${currentUser._id}`,{
+                method:'POST',
+                headers:{
+                    "Content-Type":'application/json',
+                },
+                body:JSON.stringify(formData),
+            });
+            const data=await updatedUser.json();
+            if(data.success==false)
+            {
+                dispatch(updateUserFailure(data.message));
+                return;
+            }
+            console.log("Updated User",data);
+            dispatch(updateUserSuccess(data));
+        }
+        catch(error)
+        {
+            //console.log("error message",error.message);
+            dispatch(updateUserFailure(error.message));
+        }
+    };
     return <div className="max-w-lg mx-auto p-4">
         <h1 className="text-3xl p-3 m-3 font-semibold text-center">Profile</h1>
         <input onChange={(e)=>setFile(e.target.files[0])} hidden accept="image/*" type="file" ref={fileRef} />
-        <form className="flex flex-col gap-4 ">
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4 ">
             <img onClick={()=>fileRef.current.click()} src={formData.avatar || currentUser.avatar} className="self-center mt-2 rounded-full w-24 h-24 object-cover cursor-pointer" />
             {!fileError ? <div hidden={filePercentage==0} className="text-center font-semibold uppercase">{filePercentage!=100 ? <h1>{"Upload in progress : "+filePercentage+"%"}</h1> : <h1 className="text-green">{"Upload Successful!!"}</h1>}</div> : <p className="text-center font-semibold  text-redLight">FILE UPLOAD ERROR!!<p>(Image must be less than 2MB)</p></p>}
-            <input placeholder="gmail" className="rounded-xl p-3" id="gmail" />
-            <input placeholder="username" className="rounded-xl p-3" id="username" />
-            <input placeholder="password" className="rounded-xl p-3" id="password" />
-            <button type="button" className="bg-wbrown text-googlewhite p-3 rounded-xl">Update</button>
+            <input onChange={handleFormChange} placeholder="gmail" defaultValue={currentUser.gmail} className="rounded-xl p-3" id="gmail" />
+            <input onChange={handleFormChange} placeholder="username" defaultValue={currentUser.username} className="rounded-xl p-3" id="username" />
+            <input onChange={handleFormChange} placeholder="password" defaultValue={currentUser.password} className="rounded-xl p-3" id="password" />
+            <button disabled={Loading} className="bg-wbrown text-googlewhite p-3 rounded-xl">{!Loading ? "Update" : "Loading..."}</button>
             <button type="button" className="bg-wblue text-googlewhite p-3 rounded-xl">Create Listings</button>
         </form>
         <div className="flex justify-between pt-2 mt-2">
             <p className="text-brownLight hover:text-red cursor-pointer"  >Delete account?</p>
             <p className="text-brownLight hover:text-red cursor-pointer"  >Sign out</p>
         </div>
+        <p className="text-center">{Error ? <span className="text-brown">{Error}</span> : <span className="text-green">Updated Successfully!</span>}</p>
     </div>
 }
 

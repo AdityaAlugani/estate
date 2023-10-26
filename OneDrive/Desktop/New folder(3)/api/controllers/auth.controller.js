@@ -35,10 +35,10 @@ export const signin=async (req,res,next)=>{
         {
             return next(errorHandler(401,"Invalid username or password!!"));
         }
-        const token=jwt.sign({id:validUser._id},"SERECT_KEY");
+        const token=jwt.sign({id:validUser._id},'SERECT_KEY');
         const validUserReturned={...validUser}._doc;
         validUserReturned.password="hidden";
-        return res.cookie('access token',token,{httpOnly:true}).status(200).json(validUserReturned); 
+        return res.cookie('access_token',token,{httpOnly:true}).status(200).json(validUserReturned); 
     }
     catch(error)
     {
@@ -51,10 +51,10 @@ export const google=async (req,res,next)=>{
         const validUser=await User.findOne({gmail:req.body.gmail});
         if(validUser)
         {
-            const token=jwt.sign({id:validUser._id},"SERECT_KEY");
+            const token=jwt.sign({id:validUser._id},'SERECT_KEY');
             const validUserReturned={...validUser}._doc;
             validUserReturned.password="hidden";
-            return res.cookie('access token',token,{httpOnly:true}).status(200).json(validUserReturned); 
+            return res.cookie('access_token',token,{httpOnly:true}).status(200).json(validUserReturned); 
         }
         else
         {
@@ -64,10 +64,10 @@ export const google=async (req,res,next)=>{
             avatar:req.body.photo,
         });
             await newUser.save();
-            const token=jwt.sign({id:newUser._id},"SERECT_KEY");
+            const token=jwt.sign({id:newUser._id},'SERECT_KEY');
             const validUserReturned={...newUser}._doc;
             validUserReturned.password="hidden";
-            return res.cookie('access token',token,{httpOnly:true}).status(200).json(validUserReturned);    
+            return res.cookie('access_token',token,{httpOnly:true}).status(200).json(validUserReturned);    
         }
     }
     catch(error)
