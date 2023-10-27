@@ -2,9 +2,10 @@ import react, { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import {getDownloadURL, getStorage, ref, uploadBytesResumable} from 'firebase/storage';
 import {app} from '../firebase.js';
-import { deleteUserFailure, deleteUserStart, deleteUserSuccess, updateUserFailure,updateUserStart,updateUserSuccess } from "../redux/user/userSlice.js";
+import { deleteUserFailure, deleteUserStart, deleteUserSuccess, signOutUserFailure, signOutUserSuccess, updateUserFailure,updateUserStart,updateUserSuccess } from "../redux/user/userSlice.js";
 import { useDispatch } from "react-redux";
 import {useNavigate} from "react-router-dom";
+import { signOut } from "firebase/auth";
 
 const Profile=()=>{
     const currentUser=useSelector((state)=>state.user.user.currentUser);
@@ -101,6 +102,27 @@ const Profile=()=>{
             dispatch(deleteUserFailure(error.message));
         }
     };
+
+    const handleSignOut=async ()=>{
+        try{
+            const signOutUser=await fetch('api/auth/signout',{
+                method:'POST',
+            });
+            const data=await signOutUser.json();
+            if(data.success==false)
+            {
+                dispatch(signOutUserFailure(data.message));
+                return;
+            }
+            dispatch(signOutUserSuccess());
+            navigate('/signin');
+        }
+        catch(error)
+        {
+            dispatch(signOutUserFailure(error.message));
+        }
+        
+    }
     return <div className="max-w-lg mx-auto p-4">
         <h1 className="text-3xl p-3 m-3 font-semibold text-center">Profile</h1>
         <input onChange={(e)=>setFile(e.target.files[0])} hidden accept="image/*" type="file" ref={fileRef} />
@@ -115,7 +137,7 @@ const Profile=()=>{
         </form>
         <div className="flex justify-between pt-2 mt-2">
             <p onClick={handleDelete} className="text-brownLight hover:text-red cursor-pointer">Delete account?</p>
-            <p className="text-brownLight hover:text-red cursor-pointer">Sign out</p>
+            <p onClick={handleSignOut}className="text-brownLight hover:text-red cursor-pointer">Sign out</p>
         </div>
         <p className="text-center">{Error ? <span className="text-brown">{Error}</span> : <span className="text-green">Updated Successfully!</span>}</p>
     </div>

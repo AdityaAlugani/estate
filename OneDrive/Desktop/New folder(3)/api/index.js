@@ -5,6 +5,7 @@ import userRouter from "./routes/user.route.js";
 import authRouter from "./routes/auth.route.js";
 import cors from 'cors';
 import cookieParser from "cookie-parser";
+import listingRouter from "./routes/listing.route.js";
 
 mongoose.connect("mongodb+srv://marvelsuniverse1967:Ngit%40123%24@mern-estate.02f7f0i.mongodb.net/?retryWrites=true&w=majority")
 .then(()=>{
@@ -19,6 +20,7 @@ app.use(express.json());
 
 app.use('/api/user',userRouter);
 app.use('/api/auth',authRouter);
+app.use('/api/listing',listingRouter);
 
 
 //middleware error handling
