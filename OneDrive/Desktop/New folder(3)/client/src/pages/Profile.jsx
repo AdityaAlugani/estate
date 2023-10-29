@@ -133,7 +133,7 @@ const Profile=()=>{
             <input onChange={handleFormChange} placeholder="username" defaultValue={currentUser.username} className="rounded-xl p-3" id="username" />
             <input onChange={handleFormChange} placeholder="password" defaultValue={currentUser.password} className="rounded-xl p-3" id="password" />
             <button disabled={Loading} className="bg-wbrown text-googlewhite p-3 rounded-xl">{!Loading ? "Update" : "Loading..."}</button>
-            <button type="button" className="bg-wblue text-googlewhite p-3 rounded-xl">Create Listings</button>
+            <button onClick={navigate('/create-listing')} className="bg-wblue text-googlewhite p-3 rounded-xl">Create Listings</button>
         </form>
         <div className="flex justify-between pt-2 mt-2">
             <p onClick={handleDelete} className="text-brownLight hover:text-red cursor-pointer">Delete account?</p>
