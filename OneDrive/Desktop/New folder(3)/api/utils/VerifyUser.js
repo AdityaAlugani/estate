@@ -14,7 +14,7 @@ export const verifyToken=(req,res,next)=>{
         {
             return next(errorHandler(403,error.message));
         }
-        //console.log(user);
+        console.log("This is the token payload",user);
         req.user=user;
         //console.log(user);
         next(); 
