@@ -197,7 +197,7 @@ const Profile=()=>{
                                 <p onClick={()=>navigate(`/listings/${listing._id}`)} className="self-center font-light cursor-pointer uppercase hover:underline  text-green">{listing.name}</p>
                                 <div className="flex flex-col self-center">
                                     <button type="button" onClick={()=>handleListingDelete(listing._id)} className="p-1 text-red hover:underline">DELETE</button>
-                                    <button className="text-googleblue hover:underline">EDIT</button>
+                                    <button type="button" onClick={()=>navigate(`/update-listing/${listing._id}`)} className="text-googleblue hover:underline">EDIT</button>
                                 </div>
 
                             </div>

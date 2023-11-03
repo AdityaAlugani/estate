@@ -1,14 +1,14 @@
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from "firebase/storage";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { app } from "../firebase";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
-const CreateListing=()=>{
+const UpdateListing=()=>{
     const {currentUser}=useSelector((state)=>state.user.user);
     const [files,setFiles]=useState([]);
+    const params=useParams();
     const [error,setError]=useState(false);
-    const navigate=useNavigate();
     const [loading,setLoading]=useState(false);
     const [uploading,setUploading]=useState(false);
     const [formData,setFormData]=useState({
@@ -26,7 +26,7 @@ const CreateListing=()=>{
         parking:false,
     });
     const [imageUploadError,setImageUploadError]=useState(null);
-    console.log(formData);
+    //console.log(formData);
     const storeImage=async (file)=>{
         return new Promise((resolve,reject)=>{
             const storage=getStorage(app);
@@ -122,7 +122,7 @@ const CreateListing=()=>{
         
         try{
             setLoading(true);
-            const res=await fetch("/api/listing/create",{
+            const res=await fetch(`/api/listing/update/${params.listingid}`,{
                 method:'POST',
                 headers:{
                     "Content-Type":'application/json'
@@ -138,7 +138,7 @@ const CreateListing=()=>{
             }
             setError(false);
             console.log("Created",data);
-            navigate(`/listing/${data._id}`);
+            navigate(`/listing/${params.listingid}`)
         }
         catch(error)
         {
@@ -147,14 +147,31 @@ const CreateListing=()=>{
         }
     }
 
+    useEffect(()=>{
+        const fetchListing=async ()=>{
+            const listingid=params.listingid;
+            const res=await fetch(`/api/listing/get/${listingid}`,{
+                method:'GET',
+            });
+            const data=await res.json();
+            console.log(data);
+            if(data.success===false)
+            {
+                console.log(data.message);
+                return;
+            }
+            setFormData(data);
+        }
+        fetchListing();
+    },[]);
     return (
         <main className="p-3 max-w-4xl mx-auto">
-            <h1 className="text-3xl font-semibold lg:mr-10 text-center my-7">Create a listing</h1>
+            <h1 className="text-3xl font-semibold lg:mr-10 text-center my-7">Update listing</h1>
             <form onSubmit={handleSubmit} className="flex flex-col gap-6">
                 <div className="flex max-w-3xl flex-col gap-4 flex-1 mb-3">
-                    <input type="text" onChange={handleChange} placeholder="Name" className="flex-1 p-3 rounded-lg" id="name" maxLength="62" minLength="10" required/>
-                    <textarea onChange={handleChange} type="text" placeholder="Description" className="flex-2 p-3 rounded-lg" id="description" required/>
-                    <input onChange={handleChange} type="text" placeholder="Address" className="flex-1 p-3 rounded-lg" id="address" required/>
+                    <input type="text" value={formData.name} onChange={handleChange} placeholder="Name" className="flex-1 p-3 rounded-lg" id="name" maxLength="62" minLength="10" required/>
+                    <textarea value={formData.description} onChange={handleChange} type="text" placeholder="Description" className="flex-2 p-3 rounded-lg" id="description" required/>
+                    <input value={formData.address} onChange={handleChange} type="text" placeholder="Address" className="flex-1 p-3 rounded-lg" id="address" required/>
                 </div>
                 <div className="flex flex-row gap-5 flex-1 flex-wrap">
                     <div className="flex flex-row gap-2 self-center">
@@ -179,22 +196,22 @@ const CreateListing=()=>{
                     </div>
                     <div className="flex gap-5 my-2 w-full">
                     <div className="flex items-center gap-2">
-                            <input onChange={handleChange}  placeholder="" type="number" id='bedrooms' min="1" max="10" required className="p-1 border-gray-300 rounded-lg"/>
+                            <input onChange={handleChange} value={formData.bedrooms}  placeholder="" type="number" id='bedrooms' min="1" max="10" required className="p-1 border-gray-300 rounded-lg"/>
                             <p>Beds</p>
                         </div>
                         <div className="flex items-center gap-2">
-                            <input type="number" onChange={handleChange}  id='bathrooms' min="1" max="10" required className="p-1 border-gray-300 rounded-lg"/>
+                            <input value={formData.bathrooms} type="number" onChange={handleChange}  id='bathrooms' min="1" max="10" required className="p-1 border-gray-300 rounded-lg"/>
                             <p>Baths</p>
                         </div>
                     </div>
                     <div className="flex flex-col items-center gap-4">
                             <div className="flex items-center gap-4">
-                                <input onChange={handleChange} type="number" id='regularPrice' required className="p-1 border-gray-300 rounded-lg w-20"/>
+                                <input value={formData.regularPrice} onChange={handleChange} type="number" id='regularPrice' required className="p-1 border-gray-300 rounded-lg w-20"/>
                                 <div className="flex flex-col align-middle justify-center"><p>Regular price</p> <span className="self-center">($/month)</span></div>
                             </div>
                             {formData.offer &&
                                 <div  className="flex items-center gap-2">
-                                    <input onChange={handleChange} type="number" id='discountPrice' required className="p-1 border-gray-300 rounded-lg w-20"/>
+                                    <input value={formData.discountPrice} onChange={handleChange} type="number" id='discountPrice' required className="p-1 border-gray-300 rounded-lg w-20"/>
                                     <div className="flex flex-col align-middle justify-center"><p>Discount price</p> <span className="self-center">($/month)</span></div>
                                 </div>
                             }
@@ -219,7 +236,7 @@ const CreateListing=()=>{
                     </div>
                     
                     <button disabled={uploading} type="button" onClick={handleImageSubmit} className="p-3 text-black border  rounded uppercase hover:shadow-lg hover:bg-wskin hover:text-wcreame disabled:opacity-80">{uploading ? "Uploading..." : "Upload"}</button>
-                    <button disabled={loading || uploading} type="submit" className="p-3 max-w-2xl text-black border  rounded uppercase hover:shadow-lg hover:bg-wskin hover:text-wcreame disabled:opacity-80">{loading ? "Creating..." : "Create Listing"}</button>
+                    <button disabled={loading || uploading} type="submit" className="p-3 max-w-2xl text-black border  rounded uppercase hover:shadow-lg hover:bg-wskin hover:text-wcreame disabled:opacity-80">{loading ? "Updating..." : "Update Listing"}</button>
 
                 </div>
                 {error && <p className="font-semibold text-redLight">{error}</p>}
@@ -228,4 +245,4 @@ const CreateListing=()=>{
     );
 };
 
-export default CreateListing;
+export default UpdateListing;
