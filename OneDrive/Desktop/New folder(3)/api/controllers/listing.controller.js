@@ -28,4 +28,25 @@ export const getUserListings=async (req,res,next)=>{
     {
         next(errorHandler(error.status,error.message));
     }
+};
+
+export const deleteListing=async (req,res,next)=>{
+    try{
+        const getUserListingValue=await Listing.findById(req.params.id);
+        console.log(req.params.id,getUserListingValue);
+        if(getUserListingValue && req.user.id===getUserListingValue.userRef)
+        {
+            await Listing.findByIdAndDelete(req.params.id);
+            return res.status(200).json("deleted successfully!");
+        }
+        else
+        {
+            return next(errorHandler(401,"Error:either only the owner of the listing can delete the listing or the listing doesn't exists!"));
+        }
+    }
+    catch(error)
+    {
+        next(errorHandler(error.status,error.message));
+    }
+    
 }

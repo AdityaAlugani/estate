@@ -146,6 +146,24 @@ const Profile=()=>{
         {
             setShowListingsError(true);
         }
+    };
+    const handleListingDelete=async (listingid)=>{
+        try{
+            const deletedUser=await fetch(`api/listing/delete/${listingid}`,{
+                method:'DELETE',
+            });
+            if(deletedUser.success===false)
+            {
+                alert(deletedUser.message);
+                return;
+            }
+            console.log(deletedUser);
+            setUserListings(listingbefore=>listingbefore.filter((eachlisting)=>eachlisting._id !== listingid));
+        }
+        catch(error)
+        {
+            alert(error.message);
+        }
     }
     return <div className="max-w-lg mx-auto p-4">
         <h1 className="text-3xl p-3 m-3 font-semibold text-center">Profile</h1>
@@ -178,7 +196,7 @@ const Profile=()=>{
                                 <img onClick={()=>navigate(`/listings/${listing._id}`)} src={listing.imageUrls[0]}  className="w-24 h-16 object-contain self-center" />
                                 <p onClick={()=>navigate(`/listings/${listing._id}`)} className="self-center font-light cursor-pointer uppercase hover:underline  text-green">{listing.name}</p>
                                 <div className="flex flex-col self-center">
-                                    <button className="p-1 text-red hover:underline">DELETE</button>
+                                    <button type="button" onClick={()=>handleListingDelete(listing._id)} className="p-1 text-red hover:underline">DELETE</button>
                                     <button className="text-googleblue hover:underline">EDIT</button>
                                 </div>
 
