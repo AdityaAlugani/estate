@@ -2,12 +2,13 @@ import { getDownloadURL, getStorage, ref, uploadBytesResumable } from "firebase/
 import { useEffect, useState } from "react";
 import { app } from "../firebase";
 import { useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const UpdateListing=()=>{
     const {currentUser}=useSelector((state)=>state.user.user);
     const [files,setFiles]=useState([]);
     const params=useParams();
+    const navigate=useNavigate();
     const [error,setError]=useState(false);
     const [loading,setLoading]=useState(false);
     const [uploading,setUploading]=useState(false);
@@ -64,7 +65,10 @@ const UpdateListing=()=>{
         }
         else
         {
-            setImageUploadError("You can only upload 6 images per listing");
+            if(files.length+formData.imageUrls.length>=7)
+            {
+                setImageUploadError("You can only upload 6 images per listing");
+            }
             setUploading(false);
         }
     }

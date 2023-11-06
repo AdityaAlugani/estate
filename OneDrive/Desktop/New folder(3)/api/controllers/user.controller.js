@@ -51,3 +51,18 @@ export const deleteUser=async (req,res,next)=>{
         next(errorHandler(error.message));
     }
 };
+
+export const getUserInfo=async (req,res,next)=>{
+    try{
+        const userInfo=await User.findById(req.params.id);
+        if(!userInfo)
+        {
+            return next(errorHandler(404,"User not found!"));
+        }
+        return res.status(200).json({...userInfo._doc,password:"hidden"});
+    }
+    catch(error)
+    {
+        return next(error);
+    }
+}

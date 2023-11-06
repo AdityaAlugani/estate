@@ -173,7 +173,7 @@ const Profile=()=>{
             {!fileError ? <div hidden={filePercentage==0} className="text-center font-semibold uppercase">{filePercentage!=100 ? <h1>{"Upload in progress : "+filePercentage+"%"}</h1> : <h1 className="text-green">{"Upload Successful!!"}</h1>}</div> : <p className="text-center font-semibold  text-redLight">FILE UPLOAD ERROR!!<p>(Image must be less than 2MB)</p></p>}
             <input onChange={handleFormChange} placeholder="gmail" defaultValue={currentUser.gmail} className="rounded-xl p-3" id="gmail" />
             <input onChange={handleFormChange} placeholder="username" defaultValue={currentUser.username} className="rounded-xl p-3" id="username" />
-            <input onChange={handleFormChange} placeholder="password" defaultValue={currentUser.password} className="rounded-xl p-3" id="password" />
+            <input onChange={handleFormChange} type="password" placeholder="password" defaultValue={currentUser.password} className="rounded-xl p-3" id="password" />
             <button onClick={()=>handleSubmit()} disabled={Loading} className="bg-wbrown text-googlewhite p-3 rounded-xl">{!Loading ? "Update" : "Loading..."}</button>
             <button onClick={()=>navigate('/create-listing')} className="bg-wblue text-googlewhite p-3 my-2 rounded-xl">Create Listings</button>
         </form>
@@ -183,7 +183,7 @@ const Profile=()=>{
             <p onClick={handleDelete} className="text-brownLight hover:text-red cursor-pointer">Delete account?</p>
             <p onClick={handleSignOut}className="text-brownLight hover:text-red cursor-pointer">Sign out</p>
         </div>
-        <p className="text-center">{Error ? <span className="text-brown">{Error}</span> : <span className="text-green">Updated Successfully!</span>}</p>
+        <p className="text-center">{Error ? <span className="text-brown">{Error}</span> : <span className="text-green"></span>}</p>
         <p className="text-redLight font-semibold">{showListingsError ? "Error showing listings" : ""}</p>
         <p onClick={()=>handleShowListings()} className="text-wblue text-center text-googlewhite p-3 my-2 rounded-xl cursor-pointer">Show Listings</p>
 

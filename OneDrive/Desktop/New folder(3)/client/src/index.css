@@ -8,5 +8,23 @@
 }
 body
 {
+    /* font-family: 'Viga', sans-serif; */
     background-color: rgb(248, 238, 238);
+    /* font-family: 'Roboto Flex', sans-serif; */
+    font-family: 'Inter', sans-serif;
+}
+.swiper-button-next,
+.swiper-button-prev {
+    right:10px;
+    padding: 30px;
+    color:  rgb(226, 144, 37) !important;
+    fill:  burlywood  !important;
+    stroke:  burlywood  !important;
+}
+@font-face {
+    font-family: 'CustomFont1Name';
+    src: local('StripesCaps');
+}
+.googleviga{
+    font-family: 'Viga', sans-serif;
 }

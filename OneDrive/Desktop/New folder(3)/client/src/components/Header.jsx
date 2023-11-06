@@ -9,8 +9,8 @@ const Header=()=>{
     return (<header className="bg-wskin shadow-md">
         <div className="flex justify-between items-center max-w-7xl  mx-auto p-3">
             <h1 onClick={()=>navigate("/")} className="font-bold text-sm sm:text-xl flex flex-wrap hover:cursor-pointer">
-                <span className="text-wgreen">JatayuO</span><span className="text-wcreame">-</span>
-                <span className="text-wcreame">OEstates</span>
+                <span className="text-wgreen googleviga">JatayuO</span><span className="text-wcreame">-</span>
+                <span className="text-wcreame googleviga">OEstates</span>
             </h1>
             <form className="bg-slate-100 rounded-lg no-focus-onselect  flex items-center">
                 <div className="relative">
@@ -22,7 +22,7 @@ const Header=()=>{
             <ul className="flex gap-4 ml-4 text-wcreame justify-center align-center">
                     <li onClick={()=>navigate("/")}  className="hidden sm:inline hover:underline hover:cursor-pointer">Home</li>
                     <li onClick={()=>navigate("/about")} className="hidden sm:inline hover:underline hover:cursor-pointer">About</li>
-                    {currentUser ? <img onClick={()=>navigate("/profile")} className="rounded-full h-7 w-7 object-cover" src={currentUser.avatar} alt="profile" /> : 
+                    {currentUser ? <img  onClick={()=>navigate("/profile")} className="cursor-pointer rounded-full h-7 w-7 object-cover" src={currentUser.avatar} alt="profile" /> : 
                     <li onClick={()=>navigate("/signin")} className="hover:underline hover:cursor-pointer">Sign In</li> }
                     
                 </ul>
