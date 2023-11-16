@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import ListingItem from "../components/ListingItem";
 
 export const Search=()=>{
     const [loading,setLoading]=useState(false);
@@ -83,7 +84,7 @@ export const Search=()=>{
             setLoading(false);
         }
         fetchListing();
-    },[location.search]);
+    },[window.location.search]);
     return <div className="flex flex-col md:flex-row">
         <div className="md:min-h-screen  border-wbrown p-4 border-b-[0.5px] md:border-r-[0.5px]">
             <form onSubmit={handleSubmit}>
@@ -153,11 +154,19 @@ export const Search=()=>{
 
 
 
-        <div>
+        <div className="flex-1">
             <h1 className="text-3xl text-brown font-semibold flex p-2 border-b-[0.5px] border-wbrown">Listing results:</h1>
+            <div className="flex flex-wrap gap-4 p-6">
+                {!loading && listings.length===0 && <p className="text-xl p-8">No listings found!</p>}
+                {loading && <p className="text-xl font-bold p-8 text-center w-full">Loading...</p>}
+
+                {!loading && listings.length>0 && listings.map((listing)=>{
+                    return <ListingItem key={listing._id} listing={listing}/>
+                }) }
+            </div>
         </div>
 
-
+        
     </div>
 };
 

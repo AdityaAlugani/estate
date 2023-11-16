@@ -77,17 +77,17 @@ const Listing=()=>{
                             }}/>
                         </div>
                         <div className="max-w-4xl p-4 mx-auto flex flex-col flex-wrap gap-5 m-2">
-                        {listing && <h1 className="text-2xl my-5 p-1 googleviga">{listing.name}   (${listing.offer ? listing.discountPrice : listing.regularPrice} {listing.type === 'rent' ? "/month" : "to own"})</h1>}
-                            <span><FontAwesomeIcon className="text-green" icon={faMapLocationDot} /><span className="p-2 mb-5">{listing.address}</span></span>
+                        {listing && <h1 className="text-2xl my-5 p-1 googleviga">{listing.name}   (${listing.offer ? parseInt(listing.discountPrice).toLocaleString() : parseInt(listing.regularPrice).toLocaleString()} {listing.type === 'rent' ? "/month" : "to own"})</h1>}
+                            <span><FontAwesomeIcon className="text-green mr-2" icon={faMapLocationDot} /><span className="text-md font-semibold mb-5">{listing.address}</span></span>
                             <div className="flex w-full flex-row gap-3">
-                                <button className="p-2 px-6 bg-grayLight rounded-lg">For {listing.type}</button>
-                                <button className="p-2 px-6 bg-green text-white rounded-lg">{listing.offer ? `Limited time: ${listing.discountPrice}` : <span>${`${listing.regularPrice}`}</span>}</button>
+                                <button style={{backgroundColor:"darkred"}} className="text-white uppercase px-10 rounded-lg ">FOR {listing.type}</button>
+                                <button className="p-2 px-8  text-white rounded-lg" style={{backgroundColor:"darkgreen"}}>{listing.offer ? `$${(parseInt(listing.regularPrice)-parseInt(listing.discountPrice)).toLocaleString()} OFF` : <span>${`${parseInt(listing.regularPrice).toLocaleString()}`}</span>}</button>
                             </div>
-                            <p className="text-gray text-justify">
+                            <p className="text-light text-justify">
                                 <span className="font-semibold text-black">Description-</span>
                                 {listing.description}
                             </p>
-                            <ul className="flex flex-row gap-2 sm:gap-6 text-green font-semibold flex-wrap">
+                            <ul className="flex flex-row gap-2 sm:gap-6 mb-10 text-green font-semibold flex-wrap">
                                 <li className="flex flex-row gap-1 justify-center" style={{justifyContent:"center",alignItems:"center"}}>
                                     <FaBed className="text-lg" />
                                     <p className="text-sm font-semibold">{listing.bedrooms > 1 ? `${listing.bedrooms} beds` : `${listing.bedrooms} bed`}</p>
