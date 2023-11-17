@@ -4,7 +4,8 @@ import ListingItem from "../components/ListingItem";
 
 export const Search=()=>{
     const [loading,setLoading]=useState(false);
-    const [listings,setListings]=useState({});
+    const [listings,setListings]=useState([]);
+    const [showmore,setShowmore]=useState(false);
     console.log(listings);
     const [sidebardata,setSidebardata]=useState({
         searchTerm:'',
@@ -77,14 +78,36 @@ export const Search=()=>{
         }
         const fetchListing=async ()=>{
             setLoading(true);
+            setShowmore(false);
             const searchQuery=urlparameters.toString();
             const res=await fetch(`/api/listing/get?${searchQuery}`);
             const data=await res.json();
-            setListings(data);
+            console.log("data",data.length);
+            if(data.length>9)
+            {
+                setShowmore(true);
+            }
+            setListings(data.splice(0,9));
             setLoading(false);
         }
         fetchListing();
     },[window.location.search]);
+
+    const Showmorelisting=async ()=>{
+        const numberoflistings=listings.length;
+        const startindex=numberoflistings;
+        const urlparams=new URLSearchParams(location.search);
+        urlparams.set('startIndex',startindex);
+        const searchQuery=urlparams.toString();
+        const res=await fetch(`/api/listing/get?${searchQuery}`);
+        const data=await res.json();
+        if(data.length<9)
+        {
+            setShowmore(false)
+        }
+        setListings([...listings,...data]);
+
+    }
     return <div className="flex flex-col md:flex-row">
         <div className="md:min-h-screen  border-wbrown p-4 border-b-[0.5px] md:border-r-[0.5px]">
             <form onSubmit={handleSubmit}>
@@ -155,8 +178,8 @@ export const Search=()=>{
 
 
         <div className="flex-1">
-            <h1 className="text-3xl text-brown font-semibold flex p-2 border-b-[0.5px] border-wbrown">Listing results:</h1>
-            <div className="flex flex-wrap gap-4 p-6">
+            <h1 className="text-3xl text-brown font-semibold flex p-2 mt-2 border-b-[0.5px] border-wbrown">Listing results:</h1>
+            <div className="flex flex-wrap gap-4 p-6 justify-center md:justify-normal">
                 {!loading && listings.length===0 && <p className="text-xl p-8">No listings found!</p>}
                 {loading && <p className="text-xl font-bold p-8 text-center w-full">Loading...</p>}
 
@@ -164,9 +187,10 @@ export const Search=()=>{
                     return <ListingItem key={listing._id} listing={listing}/>
                 }) }
             </div>
+            {showmore && (<div className="w-full flex items-center justify-center"> <a className="text-wgreen underline hover:text-wbrown p-5" onClick={Showmorelisting} >Show more Listings</a></div>)}
         </div>
 
-        
+
     </div>
 };
 

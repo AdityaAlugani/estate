@@ -194,7 +194,7 @@ const Profile=()=>{
             {userListings.map((listing)=>{
                             return <div key={listing._id} className="flex flex-row justify-between border border-pinkLight  p-1 rounded-md my-2">
                                 <img onClick={()=>navigate(`/listings/${listing._id}`)} src={listing.imageUrls[0]}  className="w-24 h-16 object-contain self-center" />
-                                <p onClick={()=>navigate(`/listing/${listing._id}`)} className=" self-center font-light cursor-pointer uppercase hover:underline hover:cursor-pointer  text-green">{listing.name}</p>
+                                <p onClick={()=>navigate(`/listing/${listing._id}`)} className=" self-center font-light cursor-pointer text-sm sm:text-md lg:text-lg hover:underline hover:cursor-pointer  text-green">{listing.name}</p>
                                 <div className="flex flex-col self-center">
                                     <button type="button" onClick={()=>handleListingDelete(listing._id)} className="p-1 text-red hover:underline">DELETE</button>
                                     <button type="button" onClick={()=>navigate(`/update-listing/${listing._id}`)} className="text-googleblue hover:underline">EDIT</button>
