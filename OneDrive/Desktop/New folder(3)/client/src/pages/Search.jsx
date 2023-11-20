@@ -45,11 +45,11 @@ export const Search=()=>{
     const handleSubmit=async (e)=>{
         e.preventDefault();
         const urlInfo=new URLSearchParams();
-        urlInfo.set('searchTerm',sidebardata.searchTerm);
+        urlInfo.set('searchTerm',sidebardata.searchTerm==null?"":sidebardata.searchTerm);
         urlInfo.set('type',sidebardata.type);
         urlInfo.set('furnished',sidebardata.furnished);
         urlInfo.set('offer',sidebardata.offer);
-        urlInfo.set('sort',sidebardata.sort);
+        urlInfo.set('sort',sidebardata.sort==null?"createdAt_desc":sidebardata.sort);
         urlInfo.set('order',sidebardata.order);
         urlInfo.set('parking',sidebardata.parking);
         navigate(`/search?${urlInfo.toString()}`);
@@ -86,8 +86,12 @@ export const Search=()=>{
             if(data.length>9)
             {
                 setShowmore(true);
+                setListings(data.splice(0,9));
             }
-            setListings(data.splice(0,9));
+            else
+            {
+                setListings(data);
+            }
             setLoading(false);
         }
         fetchListing();

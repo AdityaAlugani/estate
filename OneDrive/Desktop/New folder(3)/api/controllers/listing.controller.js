@@ -133,8 +133,8 @@ export const getListings=async (req,res,next)=>{
             type={$in:["sale"]};
         }
         const searchTerm=req.query.searchTerm || '';
-        const sort=req.query.sort || 'createdAt';
-        const order=req.query.order || 'desc';
+        const sort=req.query.sort || 'createdAt_desc';
+        const order=req.query.order==="null"?'desc':req.query.order;
         console.log("name",searchTerm);
         console.log("offer",offer);
         console.log("parking",parking);
